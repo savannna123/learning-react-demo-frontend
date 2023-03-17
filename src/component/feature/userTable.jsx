@@ -175,7 +175,7 @@ const UserTable = () => {
             bordered={true}
             dataSource={data}
             columns={mergedColumns}
-            rowKey="id"
+            rowKey={data=>data.username}
             rowClassName="editable-row"
             pagination={false}
         />
