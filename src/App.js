@@ -1,9 +1,10 @@
 import './App.css';
+import UserTable from "./component/userTable";
 
 function App() {
   return (
     <div className="App">
-      <h2>hello demo</h2>
+      <UserTable data-testid='test-user' />
     </div>
   );
 }
