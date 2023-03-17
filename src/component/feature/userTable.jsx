@@ -1,6 +1,5 @@
 import {Form, Input, InputNumber, Popconfirm, Table, Typography} from 'antd';
-import {useEffect, useState} from 'react';
-import {getUsers} from "../../service";
+import {useState} from 'react';
 
 const EditableCell = ({
   editing,
