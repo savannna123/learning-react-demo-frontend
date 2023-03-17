@@ -1,16 +1,6 @@
 import {Form, Input, InputNumber, Popconfirm, Table, Typography} from 'antd';
 import {useEffect, useState} from 'react';
-import {getUsers} from "../service";
-
-const originData = [];
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    key: i.toString(),
-    username: `Edward ${i}`,
-    password: `????`,
-    roleName: `hhhh`,
-  });
-}
+import {getUsers} from "../../service";
 
 const EditableCell = ({
   editing,
@@ -22,7 +12,7 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  const inputNode = inputType === 'number' ? <InputNumber/> : <Input/>;
   return (
       <td {...restProps}>
         {editing ? (
@@ -48,18 +38,28 @@ const EditableCell = ({
 };
 const UserTable = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
 
-  // useEffect(()=>{
-  //   try{
-  //     const data = getUsers();
-  //     setData(data);
-  //   }catch (e) {
-  //     console.log(e);
-  //   }
-  //
-  // },[]);
+  useEffect(() => {
+        try {
+          getUsers().then((data) => {
+            let newData = [];
+            data.map((e) => (
+              newData.push(Object.assign({}, {
+                key: e.id,
+                username: e.user_name,
+                password: e.password,
+                roleName: e.role_name,
+                createdAt: e.created_at
+              }))
+            ))
+            setData(newData);
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }, []);
 
   const isEditing = (record) => record.key === editingKey;
   const edit = (record) => {
@@ -106,14 +106,20 @@ const UserTable = () => {
     {
       title: 'password',
       dataIndex: 'password',
-      width: '15%',
+      width: '25%',
       editable: true,
     },
     {
       title: 'roleName',
       dataIndex: 'roleName',
-      width: '40%',
+      width: '15%',
       editable: true,
+    },
+    {
+      title: 'createdAt',
+      dataIndex: 'createdAt',
+      width: '15%',
+      editable: false,
     },
     {
       title: 'operation',
@@ -135,7 +141,8 @@ const UserTable = () => {
             </Popconfirm>
           </span>
         ) : (
-            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+            <Typography.Link disabled={editingKey !== ''}
+                             onClick={() => edit(record)}>
               Edit
             </Typography.Link>
         );
@@ -150,7 +157,7 @@ const UserTable = () => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
+        inputType: col.dataIndex ,
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -165,13 +172,12 @@ const UserTable = () => {
                 cell: EditableCell,
               },
             }}
-            bordered
+            bordered={true}
             dataSource={data}
             columns={mergedColumns}
+            rowKey="id"
             rowClassName="editable-row"
-            pagination={{
-              onChange: cancel,
-            }}
+            pagination={false}
         />
       </Form>
   );
