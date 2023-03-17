@@ -16,7 +16,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!axios)/'"
   },
   "eslintConfig": {
     "extends": [
@@ -37,6 +37,7 @@
     ]
   },
   "devDependencies": {
-    "http-proxy-middleware": "^2.0.6"
+    "http-proxy-middleware": "^2.0.6",
+    "jest": "^27.5.1"
   }
 }
