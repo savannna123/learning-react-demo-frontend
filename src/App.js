@@ -1,11 +1,11 @@
 import './App.css';
-import UserTable from "./component/feature/userTable";
+import UserManagement from "./component/feature/userManagement";
 
 function App() {
   return (
-    <div className="App">
-      <UserTable data-testid='test-user' />
-    </div>
+      <div className="App">
+        <UserManagement/>
+      </div>
   );
 }
 

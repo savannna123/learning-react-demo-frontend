@@ -36,30 +36,10 @@ const EditableCell = ({
       </td>
   );
 };
-const UserTable = () => {
+const UserTable = (props) => {
   const [form] = Form.useForm();
-  const [data, setData] = useState([]);
+  const [notDeletedData, setNotDeletedData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
-
-  useEffect(() => {
-        try {
-          getUsers().then((data) => {
-            let newData = [];
-            data.map((e) => (
-              newData.push(Object.assign({}, {
-                key: e.id,
-                username: e.user_name,
-                password: e.password,
-                roleName: e.role_name,
-                createdAt: e.created_at
-              }))
-            ))
-            setData(newData);
-          });
-        } catch (e) {
-          console.log(e);
-        }
-      }, []);
 
   const isEditing = (record) => record.key === editingKey;
   const edit = (record) => {
@@ -77,7 +57,7 @@ const UserTable = () => {
   const save = async (key) => {
     try {
       const row = await form.validateFields();
-      const newData = [...data];
+      const newData = [...notDeletedData];
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const item = newData[index];
@@ -85,11 +65,11 @@ const UserTable = () => {
           ...item,
           ...row,
         });
-        setData(newData);
+        setNotDeletedData(newData);
         setEditingKey('');
       } else {
         newData.push(row);
-        setData(newData);
+        setNotDeletedData(newData);
         setEditingKey('');
       }
     } catch (errInfo) {
@@ -173,7 +153,7 @@ const UserTable = () => {
               },
             }}
             bordered={true}
-            dataSource={data}
+            dataSource={props.dataSource}
             columns={mergedColumns}
             rowKey={data=>data.username}
             rowClassName="editable-row"
